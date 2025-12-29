@@ -1,0 +1,160 @@
+// This Pine Script® code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
+// © Mhill888
+// Levels, repairs and crosses are an interpretation of the 8020 strategy © 8020 Trading Pit https://8020prop.com
+// All indications should be traded with the individual discretion of the user
+//@version=6
+
+indicator("MHT 8020", overlay=true)
+
+// variables
+
+emaLen = input.int(50, minval=1, step=10, title="SMA Length")
+atrLen = input.int(1,"ATR length", minval = 1, maxval = 100, step = 1)
+eightyTwentyColor = input.color(color.silver, "8020 Colour")
+levelsColor = input.color(color.new(color.silver,transp = 67), "Levels Colour")
+lineStyle = input.string('Solid', 'Line Style', ['Solid', 'Dashed', 'Dotted'])
+colr=color.rgb(255, 255, 255, 25)
+colg=color.rgb(255, 255, 255, 25)
+labelIndent = input.int(5,'Label Indent')
+
+repair = low==open?1:0
+repairS = high==open?1:0
+atr = ta.atr(atrLen)
+atrStr = str.tostring(atr[1], format.mintick)
+CrossUp = ((high[1]-low[1])>atr and (high[2]-low[2])>atr and open[2]<close[2] and open[1]<close[1])?((close[2] + open[1])/2):0
+CrossDown = ((high[1]-low[1])>atr and (high[2]-low[2])>atr and open[2]>close[2] and open[1]>close[1])?((close[2] + open[1])/2):0
+mistress = (open == low or open == high) and (open < close[1] - 0.25 or open > close[1] +0.25)?(close[1]):0
+atrHigh = (open+atr[1])
+atrLow = (open-atr[1])
+
+var line line120 = na
+var line line180 = na
+var line line20 = na
+var line line80 = na
+var line line201 = na
+var line line801 = na
+var line candleOpen = na
+var line atrHighLine = na
+var line atrLowLine = na
+var float onehundred = na
+var label labelATR = na
+var label label120 = na
+var label label180 = na
+var label label20 = na
+var label label80 = na
+var label label201 = na
+var label label801 = na
+
+// find nearest 100 level (rounded down)
+
+RoundToHundredsDown(value) => math.floor(value / 100.0) * 100
+onehundred := RoundToHundredsDown(open)
+  
+lineStyle(x) => switch x
+    'Solid' => line.style_solid
+    'Dashed' => line.style_dashed
+    'Dotted' => line.style_dotted
+
+// labels
+
+
+label.delete(labelATR)
+labelATR := label.new(bar_index + (labelIndent * 2), open, text = "ATR=" + atrStr, style = label.style_none, textcolor = eightyTwentyColor, text_formatting = text.format_bold)
+
+label.delete(label120)
+label120 := label.new(bar_index + labelIndent, onehundred - 80, '20', style = label.style_none, textcolor = eightyTwentyColor, text_formatting = text.format_bold)
+
+label.delete(label180)
+label180 := label.new(bar_index + labelIndent, onehundred - 20, '80', style = label.style_none, textcolor = eightyTwentyColor, text_formatting = text.format_bold)
+
+label.delete(label20)
+label20 := label.new(bar_index + labelIndent, onehundred + 20, '20', style = label.style_none, textcolor = eightyTwentyColor, text_formatting = text.format_bold)
+
+label.delete(label80)
+label80 := label.new(bar_index + labelIndent, onehundred + 80, '80', style = label.style_none, textcolor = eightyTwentyColor, text_formatting = text.format_bold)
+
+label.delete(label201)
+label201 := label.new(bar_index + labelIndent, onehundred + 120, '20', style = label.style_none, textcolor = eightyTwentyColor, text_formatting = text.format_bold)
+
+label.delete(label801)
+label801 := label.new(bar_index + labelIndent, onehundred + 180, '80', style = label.style_none, textcolor = eightyTwentyColor, text_formatting = text.format_bold)
+  
+
+// draw lines
+
+for [index, value] in line.all
+    line.delete(value) 
+
+line120 := line.new(bar_index, onehundred - 80, bar_index, onehundred -80, color = levelsColor, style = lineStyle(lineStyle))
+line180 := line.new(bar_index, onehundred - 20, bar_index, onehundred - 20, color = levelsColor, style = lineStyle(lineStyle))
+line20 := line.new(bar_index, onehundred + 20, bar_index, onehundred + 20, color = levelsColor, style = lineStyle(lineStyle))
+line80 := line.new(bar_index, onehundred + 80, bar_index, onehundred + 80, color = levelsColor, style = lineStyle(lineStyle))
+line201 := line.new(bar_index, onehundred + 120, bar_index, onehundred + 120, color = levelsColor, style = lineStyle(lineStyle))
+line801 := line.new(bar_index, onehundred + 180, bar_index, onehundred + 180, color = levelsColor, style = lineStyle(lineStyle))
+
+candleOpen := line.new(bar_index,open,bar_index,open, color = eightyTwentyColor, style = line.style_dotted, width = 2)
+atrHighLine := line.new(bar_index,atrHigh,bar_index,atrHigh, color = eightyTwentyColor, style = line.style_dotted, width = 2)
+atrLowLine := line.new(bar_index,atrLow,bar_index,atrLow, color = eightyTwentyColor, style = line.style_dotted, width = 2)
+
+// set the left and right x coordinates of all of the lines
+
+for [index, value] in line.all
+    line.set_x1(value, bar_index +1)
+    line.set_x2(value, bar_index + labelIndent)
+
+//moving average outputs
+
+outa = ta.ema(close, emaLen)
+outaa = outa - (ta.atr(21) * 0.5)
+outb = outa - ta.atr(21)
+outbb = outa - (ta.atr(21) * 1.5)
+outc = outa - (ta.atr(21) * 2)
+outcc = outa - (ta.atr(21) * 2.5)
+outd = outa - (ta.atr(21) * 3)
+outdd = outa - (ta.atr(21) * 3.5)
+oute = outa - (ta.atr(21) * 4)
+outee = outa - (ta.atr(21) * 4.5)
+outf = outa - (ta.atr(21) * 5)
+outff = outa + (ta.atr(21) * 0.5)
+outg = outa + ta.atr(21)
+outgg = outa + (ta.atr(21) * 1.5)
+outh = outa + (ta.atr(21) * 2)
+outhh = outa + (ta.atr(21) * 2.5)
+outi = outa + (ta.atr(21) * 3)
+outii = outa + (ta.atr(21) * 3.5)
+outj = outa + (ta.atr(21) * 4)
+outjj = outa + (ta.atr(21) * 4.5)
+outk = outa + (ta.atr(21) * 5)
+
+//moving average plots
+
+col=open>outg ? #00ff00 : open<outb ? #ff0000 : #FFA500   
+plot(outa, color=col, linewidth=2, offset = 0)
+plot(outaa, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outb, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outbb, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outc, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outcc, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outd, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outdd, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(oute, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outee, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outf, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outff, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outg, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outgg, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outh, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outhh, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outi, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outii, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outj, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outjj, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outk, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+
+// 8020 plots 
+
+plotshape(repair,"Repair",shape.xcross,location.absolute,color.white)
+plotshape(repairS,"RepairS",shape.xcross,location.absolute,color.white)
+plotshape(CrossUp,"Cross",style = shape.xcross,location = location.absolute,offset = -1,color = color.white, size = size.auto, force_overlay = true)
+plotshape(CrossDown,"Cross",style = shape.xcross,location = location.absolute,offset = -1,color = color.white, size = size.auto, force_overlay = true)
+plotshape(mistress,"Mistress",style = shape.xcross,location = location.absolute,color = color.white, size = size.auto, force_overlay = true)
