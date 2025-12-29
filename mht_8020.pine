@@ -8,7 +8,7 @@ indicator("MHT 8020", overlay=true)
 
 // variables
 
-emaLen = input.int(50, minval=1, step=10, title="SMA Length")
+emaLen = input.int(50, minval=1, step=10, title="EMA Length")
 atrLen = input.int(1,"ATR length", minval = 1, maxval = 100, step = 1)
 eightyTwentyColor = input.color(color.silver, "8020 Colour")
 levelsColor = input.color(color.new(color.silver,transp = 67), "Levels Colour")
