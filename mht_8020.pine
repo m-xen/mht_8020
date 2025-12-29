@@ -12,7 +12,8 @@ emaLen = input.int(50, minval=1, step=10, title="EMA Length")
 atrLen = input.int(21,"ATR length", minval = 1, maxval = 100, step = 1)
 eightyTwentyColor = input.color(color.silver, "8020 Colour")
 levelsColor = input.color(color.new(color.silver,transp = 67), "Levels Colour")
-lineStyle = input.string('Solid', 'Line Style', ['Solid', 'Dashed', 'Dotted'])
+lineStyle = input.string('Solid', 'Level Line Style', ['Solid', 'Dashed', 'Dotted'])
+lineStyleMA = input.string('Solid', 'MA Line Style', ['Solid', 'Dashed', 'Dotted'])
 colr=color.rgb(255, 255, 255, 25)
 colg=color.rgb(255, 255, 255, 25)
 labelIndent = input.int(5,'Label Indent')
@@ -55,6 +56,12 @@ lineStyle(x) => switch x
     'Dashed' => line.style_dashed
     'Dotted' => line.style_dotted
 
+lineStylePlot = switch lineStyleMA
+    'Solid' => plot.linestyle_solid
+    'Dashed' => plot.linestyle_dashed
+    'Dotted' => plot.linestyle_dotted
+    => plot.linestyle_solid
+
 // labels
 
 
@@ -92,9 +99,9 @@ line80 := line.new(bar_index, onehundred + 80, bar_index, onehundred + 80, color
 line201 := line.new(bar_index, onehundred + 120, bar_index, onehundred + 120, color = levelsColor, style = lineStyle(lineStyle))
 line801 := line.new(bar_index, onehundred + 180, bar_index, onehundred + 180, color = levelsColor, style = lineStyle(lineStyle))
 
-candleOpen := line.new(bar_index,open,bar_index,open, color = eightyTwentyColor, style = line.style_dotted, width = 2)
-atrHighLine := line.new(bar_index,atrHigh,bar_index,atrHigh, color = eightyTwentyColor, style = line.style_dotted, width = 2)
-atrLowLine := line.new(bar_index,atrLow,bar_index,atrLow, color = eightyTwentyColor, style = line.style_dotted, width = 2)
+candleOpen := line.new(bar_index,open,bar_index,open, color = eightyTwentyColor, style = lineStyle(lineStyle), width = 2)
+atrHighLine := line.new(bar_index,atrHigh,bar_index,atrHigh, color = eightyTwentyColor, style = lineStyle(lineStyle), width = 2)
+atrLowLine := line.new(bar_index,atrLow,bar_index,atrLow, color = eightyTwentyColor, style = lineStyle(lineStyle), width = 2)
 
 // set the left and right x coordinates of all of the lines
 
@@ -130,26 +137,26 @@ outk = outa + (ta.atr(atrLen) * 5)
 
 col=open>outg ? #00ff00 : open<outb ? #ff0000 : #FFA500   
 plot(outa, color=col, linewidth=2, offset = 0)
-plot(outaa, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outb, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outbb, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outc, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outcc, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outd, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outdd, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(oute, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outee, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outf, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outff, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outg, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outgg, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outh, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outhh, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outi, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outii, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outj, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outjj, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
-plot(outk, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = plot.linestyle_dotted)
+plot(outaa, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outb, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outbb, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outc, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outcc, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outd, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outdd, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(oute, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outee, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outf, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outff, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outg, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outgg, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outh, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outhh, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outi, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outii, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outj, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outjj, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(outk, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
 
 // 8020 plots 
 
