@@ -89,7 +89,6 @@ line.new(bar_index, (array.get(arr8020,2)), bar_index, (array.get(arr8020,2)), c
 line.new(bar_index, (array.get(arr8020,3)), bar_index, (array.get(arr8020,3)), color = levelsColor, style = lineStyle(lineStyle))
 line.new(bar_index, (array.get(arr8020,4)), bar_index, (array.get(arr8020,4)), color = levelsColor, style = lineStyle(lineStyle))
 line.new(bar_index, (array.get(arr8020,5)), bar_index, (array.get(arr8020,5)), color = levelsColor, style = lineStyle(lineStyle))
-
 line.new(bar_index, (array.get(arr8020,6)), bar_index, (array.get(arr8020,6)), color = levelsColor, style = lineStyle(lineStyle))
 line.new(bar_index, (array.get(arr8020,7)), bar_index, (array.get(arr8020,7)), color = levelsColor, style = lineStyle(lineStyle))
 line.new(bar_index, (array.get(arr8020,8)), bar_index, (array.get(arr8020,8)), color = levelsColor, style = lineStyle(lineStyle))
