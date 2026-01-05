@@ -21,7 +21,8 @@ labelIndent = input.int(5,'Label Indent')
 repair = low==open?1:0
 repairS = high==open?1:0
 atr = ta.atr(atrLen)
-atrStr = str.tostring(atr[1], format.mintick)
+atr1 = request.security(syminfo.tickerid, "1", ta.atr(21))
+atrStr = str.tostring((atr1), format.mintick)
 CrossUp = ((high[1]-low[1])>atr and (high[2]-low[2])>atr and open[2]<close[2] and open[1]<close[1])?((close[2] + open[1])/2):0
 CrossDown = ((high[1]-low[1])>atr and (high[2]-low[2])>atr and open[2]>close[2] and open[1]>close[1])?((close[2] + open[1])/2):0
 mistress = (open == low or open == high) and (open < close[1] - 0.25 or open > close[1] +0.25)?(close[1]):0
