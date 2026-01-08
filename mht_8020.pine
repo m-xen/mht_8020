@@ -31,6 +31,7 @@ atrLow = (open-atr[1])
 
 var float onehundred = na
 var label labelATR = na
+var label labelATRL = na
 var label label0 = na
 var label label1 = na
 var label label2 = na
@@ -113,7 +114,12 @@ for [index, value] in line.all
 // labels
 
 label.delete(labelATR)
-labelATR := label.new(bar_index + (labelIndent * 2), open, text = "ATR=" + atrStr, style = label.style_none, textcolor = eightyTwentyColor, text_formatting = text.format_bold)
+labelATR := label.new(bar_index + (labelIndent), open+atr1[1], text = "1m ATR=" + atrStr, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
+label.set_color(labelATR,color.green)
+
+label.delete(labelATRL)
+labelATRL := label.new(bar_index + (labelIndent), open-atr1[1], text = "1m ATR=" + atrStr, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
+label.set_color(labelATRL,color.red)
 
 label.delete(label0)
 label0 := label.new(bar_index + labelIndent, (array.get(arr8020,0)), '80', style = label.style_none, textcolor = eightyTwentyColor, text_formatting = text.format_bold)
