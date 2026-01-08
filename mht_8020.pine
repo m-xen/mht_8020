@@ -23,6 +23,7 @@ repairS = high==open?1:0
 atr = ta.atr(atrLen)
 atr1 = request.security(syminfo.tickerid, "1", ta.atr(21))
 atrStr = str.tostring((atr1), format.mintick)
+atrStr10 = str.tostring((atr), format.mintick)
 CrossUp = ((high[1]-low[1])>atr and (high[2]-low[2])>atr and open[2]<close[2] and open[1]<close[1])?((close[2] + open[1])/2):0
 CrossDown = ((high[1]-low[1])>atr and (high[2]-low[2])>atr and open[2]>close[2] and open[1]>close[1])?((close[2] + open[1])/2):0
 mistress = (open == low or open == high) and (open < close[1] - 0.25 or open > close[1] +0.25)?(close[1]):0
@@ -30,8 +31,10 @@ atrHigh = (open+atr[1])
 atrLow = (open-atr[1])
 
 var float onehundred = na
-var label labelATR = na
+var label labelATRH = na
 var label labelATRL = na
+var label label10ATRH = na
+var label label10ATRL = na
 var label label0 = na
 var label label1 = na
 var label label2 = na
@@ -113,13 +116,21 @@ for [index, value] in line.all
 
 // labels
 
-label.delete(labelATR)
-labelATR := label.new(bar_index + (labelIndent), open+atr1[1], text = "1m ATR=" + atrStr, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
-label.set_color(labelATR,color.green)
+label.delete(labelATRH)
+labelATRH := label.new(bar_index + (labelIndent), open+atr1[1], text = "1m ATR=" + atrStr, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
+label.set_color(labelATRH,color.green)
 
 label.delete(labelATRL)
 labelATRL := label.new(bar_index + (labelIndent), open-atr1[1], text = "1m ATR=" + atrStr, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
 label.set_color(labelATRL,color.red)
+
+label.delete(label10ATRH)
+label10ATRH := label.new(bar_index + (labelIndent + 1), open+atr[1], text = "10m ATR=" + atrStr10, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
+label.set_color(label10ATRH,color.green)
+
+label.delete(label10ATRL)
+label10ATRL := label.new(bar_index + (labelIndent + 1), open-atr[1], text = "10m ATR=" + atrStr10, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
+label.set_color(label10ATRL,color.red)
 
 label.delete(label0)
 label0 := label.new(bar_index + labelIndent, (array.get(arr8020,0)), '80', style = label.style_none, textcolor = eightyTwentyColor, text_formatting = text.format_bold)
