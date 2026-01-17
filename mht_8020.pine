@@ -121,12 +121,12 @@ for [index, value] in line.all
 // labels
 
 label.delete(labeltrL)
-labeltrL := label.new(bar_index + (labelIndent), open-tr1, text = trLen1Str + " min range " + trStr, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
-label.set_color(labeltrL,color.red)
+labeltrL := label.new(bar_index + (labelIndent), open-tr1, text = trLen1Str + " min range " + trStr, style = label.style_label_left, textcolor = color.white, text_formatting = text.format_bold)
+label.set_color(labeltrL,color.navy)
 
 label.delete(label10trL)
-label10trL := label.new(bar_index + (labelIndent + 1), open-tr, text = trLen10Str + "0 min range " + trStr10, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
-label.set_color(label10trL,color.red)
+label10trL := label.new(bar_index + (labelIndent + 1), open-tr, text = trLen10Str + "0 min range " + trStr10, style = label.style_label_left, textcolor = color.white, text_formatting = text.format_bold)
+label.set_color(label10trL,color.navy)
 
 label.delete(label0)
 label0 := label.new(bar_index + labelIndent, (array.get(arr8020,0)), '80', style = label.style_none, textcolor = eightyTwentyColor, text_formatting = text.format_bold)
@@ -203,4 +203,4 @@ plotshape(repair,"Repair",shape.xcross,location.absolute,color.white)
 plotshape(repairS,"RepairS",shape.xcross,location.absolute,color.white)
 plotshape(CrossUp,"Cross",style = shape.xcross,location = location.absolute,offset = -1,color = color.white, size = size.auto, force_overlay = true)
 plotshape(CrossDown,"Cross",style = shape.xcross,location = location.absolute,offset = -1,color = color.white, size = size.auto, force_overlay = true)
-plotshape(mistress,"Mistress",style = shape.xcross,location = location.absolute,color = color.white, size = size.auto, force_overlay = true)ß
+plotshape(mistress,"Mistress",style = shape.xcross,location = location.absolute,color = color.white, size = size.auto, force_overlay = true)
