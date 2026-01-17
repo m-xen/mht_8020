@@ -10,7 +10,9 @@ indicator("MHT 8020", overlay=true)
 
 emaLen = input.int(50, minval=1, step=10, title="EMA Length")
 atrLen1 = input.int(10,"1 Min Range length", minval = 1, maxval = 100, step = 1)
+atrLen1Str = str.tostring((atrLen1), '#')
 atrLen10 = input.int(10,"10 Min Range length", minval = 1, maxval = 100, step = 1)
+atrLen10Str = str.tostring((atrLen10), '#')
 eightyTwentyColor = input.color(color.silver, "8020 Colour")
 levelsColor = input.color(color.new(color.silver,transp = 67), "Levels Colour")
 lineStyle = input.string('Solid', 'Level Line Style', ['Solid', 'Dashed', 'Dotted'])
@@ -21,14 +23,11 @@ labelIndent = input.int(5,'Label Indent')
 
 repair = low==open?1:0
 repairS = high==open?1:0
-//atr = ta.atr(atrLen)
-atr = math.abs(ta.highest(high,atrLen10) - ta.lowest(low,atrLen10))
 
-//atr1 = request.security(syminfo.tickerid, "1", ta.atr(21))
+atr = math.abs(ta.highest(high,atrLen10) - ta.lowest(low,atrLen10))
 atrH = request.security(syminfo.tickerid, "1", ta.highest(atrLen1))
 atrL = request.security(syminfo.tickerid, "1", ta.lowest(atrLen1))
 atr1 = math.abs(atrH - atrL)
-
 atrStr = str.tostring((atr1), format.mintick)
 atrStr10 = str.tostring((atr), format.mintick)
 CrossUp = ((high[1]-low[1])>atr and (high[2]-low[2])>atr and open[2]<close[2] and open[1]<close[1])?((close[2] + open[1])/2):0
@@ -38,9 +37,7 @@ atrHigh = (open+atr[1])
 atrLow = (open-atr[1])
 
 var float onehundred = na
-//var label labelATRH = na
 var label labelATRL = na
-//var label label10ATRH = na
 var label label10ATRL = na
 var label label0 = na
 var label label1 = na
@@ -123,20 +120,12 @@ for [index, value] in line.all
 
 // labels
 
-//label.delete(labelATRH)
-//labelATRH := label.new(bar_index + (labelIndent), open+atr1[1], text = "1m ATR=" + atrStr, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
-//label.set_color(labelATRH,color.green)
-
 label.delete(labelATRL)
-labelATRL := label.new(bar_index + (labelIndent), open-atr1[1], text = "1m range=" + atrStr, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
+labelATRL := label.new(bar_index + (labelIndent), open-atr1[1], text = atrLen1Str + " x 1m range " + atrStr, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
 label.set_color(labelATRL,color.red)
 
-//label.delete(label10ATRH)
-//label10ATRH := label.new(bar_index + (labelIndent + 1), open+atr[1], text = "10m ATR=" + atrStr10, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
-//label.set_color(label10ATRH,color.green)
-
 label.delete(label10ATRL)
-label10ATRL := label.new(bar_index + (labelIndent + 1), open-atr[1], text = "10m range=" + atrStr10, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
+label10ATRL := label.new(bar_index + (labelIndent + 1), open-atr[1], text = atrLen10Str + " x 10m range " + atrStr10, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
 label.set_color(label10ATRL,color.red)
 
 label.delete(label0)
@@ -207,21 +196,11 @@ plot((outa - (ta.atr(atrLen1) * (array.get(arrMa,1)))), color=colr, linewidth=1,
 plot((outa - (ta.atr(atrLen1) * (array.get(arrMa,2)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
 plot((outa - (ta.atr(atrLen1) * (array.get(arrMa,3)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
 plot((outa - (ta.atr(atrLen1) * (array.get(arrMa,4)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-//plot((outa - (ta.atr(atrLen) * (array.get(arrMa,5)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-//plot((outa - (ta.atr(atrLen) * (array.get(arrMa,6)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-//plot((outa - (ta.atr(atrLen) * (array.get(arrMa,7)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-//plot((outa - (ta.atr(atrLen) * (array.get(arrMa,8)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-//plot((outa - (ta.atr(atrLen) * (array.get(arrMa,9)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
 plot((outa + (ta.atr(atrLen1) * (array.get(arrMa,0)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
 plot((outa + (ta.atr(atrLen1) * (array.get(arrMa,1)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
 plot((outa + (ta.atr(atrLen1) * (array.get(arrMa,2)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
 plot((outa + (ta.atr(atrLen1) * (array.get(arrMa,3)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
 plot((outa + (ta.atr(atrLen1) * (array.get(arrMa,4)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-//plot((outa + (ta.atr(atrLen) * (array.get(arrMa,5)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-//plot((outa + (ta.atr(atrLen) * (array.get(arrMa,6)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-//plot((outa + (ta.atr(atrLen) * (array.get(arrMa,7)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-//plot((outa + (ta.atr(atrLen) * (array.get(arrMa,8)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-//plot((outa + (ta.atr(atrLen) * (array.get(arrMa,9)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
 
 // 8020 plots 
 
