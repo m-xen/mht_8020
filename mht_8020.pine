@@ -9,10 +9,10 @@ indicator("MHT 8020", overlay=true)
 // variables
 
 emaLen = input.int(50, minval=1, step=10, title="EMA Length")
-atrLen1 = input.int(10,"1 Min Range length", minval = 1, maxval = 100, step = 1)
-atrLen1Str = str.tostring((atrLen1), '#')
-atrLen10 = input.int(10,"10 Min Range length", minval = 1, maxval = 100, step = 1)
-atrLen10Str = str.tostring((atrLen10), '#')
+trLen1 = input.int(10,"1 Min Range length", minval = 1, maxval = 100, step = 1)
+trLen1Str = str.tostring((trLen1), '#')
+trLen10 = input.int(6,"10 Min Range length", minval = 1, maxval = 100, step = 1)
+trLen10Str = str.tostring((trLen10), '#')
 eightyTwentyColor = input.color(color.silver, "8020 Colour")
 levelsColor = input.color(color.new(color.silver,transp = 67), "Levels Colour")
 lineStyle = input.string('Solid', 'Level Line Style', ['Solid', 'Dashed', 'Dotted'])
@@ -24,21 +24,21 @@ labelIndent = input.int(5,'Label Indent')
 repair = low==open?1:0
 repairS = high==open?1:0
 
-atr = math.abs(ta.highest(high,atrLen10) - ta.lowest(low,atrLen10))
-atrH = request.security(syminfo.tickerid, "1", ta.highest(atrLen1))
-atrL = request.security(syminfo.tickerid, "1", ta.lowest(atrLen1))
-atr1 = math.abs(atrH - atrL)
-atrStr = str.tostring((atr1), format.mintick)
-atrStr10 = str.tostring((atr), format.mintick)
-CrossUp = ((high[1]-low[1])>atr and (high[2]-low[2])>atr and open[2]<close[2] and open[1]<close[1])?((close[2] + open[1])/2):0
-CrossDown = ((high[1]-low[1])>atr and (high[2]-low[2])>atr and open[2]>close[2] and open[1]>close[1])?((close[2] + open[1])/2):0
+tr = math.abs(ta.highest(high,trLen10) - ta.lowest(low,trLen10))
+trH = request.security(syminfo.tickerid, "1", ta.highest(trLen1))
+trL = request.security(syminfo.tickerid, "1", ta.lowest(trLen1))
+tr1 = math.abs(trH - trL)
+trStr = str.tostring((tr1), format.mintick)
+trStr10 = str.tostring((tr), format.mintick)
+CrossUp = ((high[1]-low[1])>tr and (high[2]-low[2])>tr and open[2]<close[2] and open[1]<close[1])?((close[2] + open[1])/2):0
+CrossDown = ((high[1]-low[1])>tr and (high[2]-low[2])>tr and open[2]>close[2] and open[1]>close[1])?((close[2] + open[1])/2):0
 mistress = (open == low or open == high) and (open < close[1] - 0.25 or open > close[1] +0.25)?(close[1]):0
-atrHigh = (open+atr[1])
-atrLow = (open-atr[1])
+trHigh = (open+tr)
+trLow = (open-tr)
 
 var float onehundred = na
-var label labelATRL = na
-var label label10ATRL = na
+var label labeltrL = na
+var label label10trL = na
 var label label0 = na
 var label label1 = na
 var label label2 = na
@@ -109,8 +109,8 @@ line.new(bar_index, (array.get(arr8020,13)), bar_index, (array.get(arr8020,13)),
 
 
 line.new(bar_index,open,bar_index,open, color = eightyTwentyColor, style = lineStyle(lineStyle), width = 2)
-line.new(bar_index,atrHigh,bar_index,atrHigh, color = eightyTwentyColor, style = lineStyle(lineStyle), width = 2)
-line.new(bar_index,atrLow,bar_index,atrLow, color = eightyTwentyColor, style = lineStyle(lineStyle), width = 2)
+line.new(bar_index,trHigh,bar_index,trHigh, color = eightyTwentyColor, style = lineStyle(lineStyle), width = 2)
+line.new(bar_index,trLow,bar_index,trLow, color = eightyTwentyColor, style = lineStyle(lineStyle), width = 2)
 
 // set the left and right x coordinates of all of the lines
 
@@ -120,13 +120,13 @@ for [index, value] in line.all
 
 // labels
 
-label.delete(labelATRL)
-labelATRL := label.new(bar_index + (labelIndent), open-atr1[1], text = atrLen1Str + " x 1m range " + atrStr, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
-label.set_color(labelATRL,color.red)
+label.delete(labeltrL)
+labeltrL := label.new(bar_index + (labelIndent), open-tr1, text = trLen1Str + " min range " + trStr, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
+label.set_color(labeltrL,color.red)
 
-label.delete(label10ATRL)
-label10ATRL := label.new(bar_index + (labelIndent + 1), open-atr[1], text = atrLen10Str + " x 10m range " + atrStr10, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
-label.set_color(label10ATRL,color.red)
+label.delete(label10trL)
+label10trL := label.new(bar_index + (labelIndent + 1), open-tr, text = trLen10Str + "0 min range " + trStr10, style = label.style_label_left, textcolor = color.yellow, text_formatting = text.format_bold)
+label.set_color(label10trL,color.red)
 
 label.delete(label0)
 label0 := label.new(bar_index + labelIndent, (array.get(arr8020,0)), '80', style = label.style_none, textcolor = eightyTwentyColor, text_formatting = text.format_bold)
@@ -173,16 +173,11 @@ label13 := label.new(bar_index + labelIndent, (array.get(arr8020,13)), '20', sty
 //moving average outputs
 
 arrMa = array.new_float(0)
- 
-//array.push(arrMa, 0.5)
+
 array.push(arrMa, 1)
-//array.push(arrMa, 1.5)
 array.push(arrMa, 2)
-//array.push(arrMa, 2.5)
 array.push(arrMa, 3)
-//array.push(arrMa, 3.5)
 array.push(arrMa, 4)
-//array.push(arrMa, 4.5)
 array.push(arrMa, 5)
 
 outa = ta.ema(close, emaLen)
@@ -191,16 +186,16 @@ outa = ta.ema(close, emaLen)
 
 col=open>outa ? #00ff00 : #ff0000  
 plot(outa, color=col, linewidth=2, offset = 0)
-plot((outa - (ta.atr(atrLen1) * (array.get(arrMa,0)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa - (ta.atr(atrLen1) * (array.get(arrMa,1)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa - (ta.atr(atrLen1) * (array.get(arrMa,2)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa - (ta.atr(atrLen1) * (array.get(arrMa,3)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa - (ta.atr(atrLen1) * (array.get(arrMa,4)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa + (ta.atr(atrLen1) * (array.get(arrMa,0)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa + (ta.atr(atrLen1) * (array.get(arrMa,1)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa + (ta.atr(atrLen1) * (array.get(arrMa,2)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa + (ta.atr(atrLen1) * (array.get(arrMa,3)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa + (ta.atr(atrLen1) * (array.get(arrMa,4)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot((outa - (ta.atr(trLen1) * (array.get(arrMa,0)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot((outa - (ta.atr(trLen1) * (array.get(arrMa,1)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot((outa - (ta.atr(trLen1) * (array.get(arrMa,2)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot((outa - (ta.atr(trLen1) * (array.get(arrMa,3)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot((outa - (ta.atr(trLen1) * (array.get(arrMa,4)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot((outa + (ta.atr(trLen1) * (array.get(arrMa,0)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot((outa + (ta.atr(trLen1) * (array.get(arrMa,1)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot((outa + (ta.atr(trLen1) * (array.get(arrMa,2)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot((outa + (ta.atr(trLen1) * (array.get(arrMa,3)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot((outa + (ta.atr(trLen1) * (array.get(arrMa,4)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
 
 // 8020 plots 
 
@@ -208,4 +203,4 @@ plotshape(repair,"Repair",shape.xcross,location.absolute,color.white)
 plotshape(repairS,"RepairS",shape.xcross,location.absolute,color.white)
 plotshape(CrossUp,"Cross",style = shape.xcross,location = location.absolute,offset = -1,color = color.white, size = size.auto, force_overlay = true)
 plotshape(CrossDown,"Cross",style = shape.xcross,location = location.absolute,offset = -1,color = color.white, size = size.auto, force_overlay = true)
-plotshape(mistress,"Mistress",style = shape.xcross,location = location.absolute,color = color.white, size = size.auto, force_overlay = true)
+plotshape(mistress,"Mistress",style = shape.xcross,location = location.absolute,color = color.white, size = size.auto, force_overlay = true)ß
