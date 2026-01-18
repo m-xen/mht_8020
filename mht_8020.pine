@@ -121,7 +121,7 @@ for [index, value] in line.all
 // labels
 
 label.delete(labeltrL)
-labeltrL := label.new(bar_index + (labelIndent + 10), open, text = trLen1Str + " min range " + trStr, style = label.style_label_left, textcolor = color.white, text_formatting = text.format_bold)
+labeltrL := label.new(bar_index + (labelIndent + 10), open, text = trLen1Str + " min ∑range " + trStr, style = label.style_label_left, textcolor = color.white, text_formatting = text.format_bold)
 label.set_color(labeltrL,color.navy)
 
 label.delete(label10trL)
