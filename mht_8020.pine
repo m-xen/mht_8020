@@ -23,7 +23,7 @@ repair = low==open?1:0
 repairS = high==open?1:0
 
 trLen1Str = str.tostring((trLen1), '#')
-minuteRange = math.abs(request.security(syminfo.tickerid,"1",high[1]) - request.security(syminfo.tickerid,"1",low[1]))
+minuteRange = math.abs(request.security(syminfo.tickerid,"1",high) - request.security(syminfo.tickerid,"1",low))
 float tr1 = minuteRange
 for i = 1 to (trLen1 -1)
     tr1 := tr1 + minuteRange[i]
