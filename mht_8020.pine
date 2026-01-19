@@ -11,7 +11,6 @@ indicator("MHT 8020", overlay=true)
 emaLen = input.int(50, minval=1, step=10, title="EMA Length")
 trLen1 = input.int(3,"Top Range length (min)", minval = 1, maxval = 100, step = 1)
 trLen10 = input.int(10,"Bottom Range length (min)", minval = 1, maxval = 100, step = 1)
-rangeSep = input.int(20, minval=1, step=1, title="Range Label Separation")
 eightyTwentyColor = input.color(color.silver, "8020 Colour")
 levelsColor = input.color(color.new(color.silver,transp = 67), "Levels Colour")
 lineStyle = input.string('Solid', 'Level Line Style', ['Solid', 'Dashed', 'Dotted'])
@@ -42,8 +41,7 @@ mistress = (open == low or open == high) and (open < close[1] - 0.25 or open > c
 
 
 var float onehundred = na
-var label labeltrL = na
-var label label10trL = na
+var label labeltr = na
 var label label0 = na
 var label label1 = na
 var label label2 = na
@@ -120,13 +118,9 @@ for [index, value] in line.all
 
 // labels
 
-label.delete(labeltrL)
-labeltrL := label.new(bar_index + (labelIndent + 10), open, text = trLen1Str + " min ∑range " + trStr, style = label.style_label_left, textcolor = color.white, text_formatting = text.format_bold)
-label.set_color(labeltrL,color.navy)
-
-label.delete(label10trL)
-label10trL := label.new(bar_index + (labelIndent + 10), open - rangeSep, text = trLen10Str + " min range " + trStr10, style = label.style_label_left, textcolor = color.white, text_formatting = text.format_bold)
-label.set_color(label10trL,color.navy)
+label.delete(labeltr)
+labeltr := label.new(bar_index + (labelIndent + 10), open, text = trLen1Str + " min ∑range " + trStr + "\n" + trLen10Str + " min range " + trStr10, style = label.style_label_center, textcolor = color.white, text_formatting = text.format_bold)
+label.set_color(labeltr,color.navy)
 
 label.delete(label0)
 label0 := label.new(bar_index + 3, (array.get(arr8020,0)), '80', style = label.style_none, textcolor = eightyTwentyColor, text_formatting = text.format_bold)
