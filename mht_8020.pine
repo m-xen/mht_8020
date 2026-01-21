@@ -34,10 +34,13 @@ tr10H = request.security(syminfo.tickerid,"1",ta.highest(trLen10))
 tr10L = request.security(syminfo.tickerid,"1",ta.lowest(trLen10))
 tr10 = math.abs(tr10H - tr10L)
 trStr10 = str.tostring((tr10), format.mintick)
+tr10Ema = ta.ema(tr10,21)
+tr1Ema = ta.ema(tr1,21)
+trEma = (tr10Ema + tr1Ema) /2
 
-CrossUp = ((high[1]-low[1])>tr1 and (high[2]-low[2])>tr1 and open[2]<close[2] and open[1]<close[1])?((close[2] + open[1])/2):0
-CrossDown = ((high[1]-low[1])>tr1 and (high[2]-low[2])>tr1 and open[2]>close[2] and open[1]>close[1])?((close[2] + open[1])/2):0
-mistress = (open == low or open == high) and (open < close[1] - 0.25 or open > close[1] +0.25)?(close[1]):0
+CrossUp = ((high[1]-low[1])>trEma and (high[2]-low[2])>trEma and open[2]<close[2] and open[1]<close[1])?((close[2] + open[1])/2):0
+CrossDown = ((high[1]-low[1])>trEma and (high[2]-low[2])>trEma and open[2]>close[2] and open[1]>close[1])?((close[2] + open[1])/2):0
+mistress = math.abs(open - close[1]) > 1 ? open : 0
 
 
 var float onehundred = na
