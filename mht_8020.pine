@@ -23,19 +23,22 @@ repair = low==open?1:0
 repairS = high==open?1:0
 
 trLen1Str = str.tostring((trLen1), '#')
-minuteRange = math.abs(request.security(syminfo.tickerid,"1",high) - request.security(syminfo.tickerid,"1",low))
-float tr1 = minuteRange
-for i = 1 to (trLen1 -1)
-    tr1 := tr1 + minuteRange[i]
-trStr = str.tostring((tr1), format.mintick)
+tr1H = request.security(syminfo.tickerid,"1",high)
+tr1L = request.security(syminfo.tickerid,"1",low)
+float minuteRange = math.abs(tr1H - tr1L)
+float threeMinuteRange = 0
+
+for i = 0 to (trLen1 -1)
+    threeMinuteRange := threeMinuteRange + minuteRange[i]
+trStr = str.tostring((threeMinuteRange), format.mintick)
 
 trLen10Str = str.tostring((trLen10), '#')
 tr10H = request.security(syminfo.tickerid,"1",ta.highest(trLen10))
 tr10L = request.security(syminfo.tickerid,"1",ta.lowest(trLen10))
 tr10 = math.abs(tr10H - tr10L)
-trStr10 = str.tostring((tr10), format.mintick)
+trStr10 = str.tostring(tr10, format.mintick)
 tr10Ema = ta.ema(tr10,21)
-tr1Ema = ta.ema(tr1,21)
+tr1Ema = ta.ema(minuteRange,21)
 trEma = (tr10Ema + tr1Ema) /2
 
 mistress = math.abs(open - close[1]) > 1 ? open : 0
