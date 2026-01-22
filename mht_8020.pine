@@ -1,6 +1,6 @@
 // This Pine Script® code is subject to the terms of the Mozilla Public License 2.0 at https://mozilla.org/MPL/2.0/
 // © Mhill888
-// Levels, repairs and crosses are an interpretation of the 8020 strategy © 8020 Trading Pit https://8020prop.com
+// Levels and setups are an interpretation of the 8020 strategy © 8020 Trading Pit https://8020prop.com
 // All indications should be traded with the individual discretion of the user
 //@version=6
 
@@ -38,8 +38,6 @@ tr10Ema = ta.ema(tr10,21)
 tr1Ema = ta.ema(tr1,21)
 trEma = (tr10Ema + tr1Ema) /2
 
-CrossUp = ((high[1]-low[1])>trEma and (high[2]-low[2])>trEma and open[2]<close[2] and open[1]<close[1])?((close[2] + open[1])/2):0
-CrossDown = ((high[1]-low[1])>trEma and (high[2]-low[2])>trEma and open[2]>close[2] and open[1]>close[1])?((close[2] + open[1])/2):0
 mistress = math.abs(open - close[1]) > 1 ? open : 0
 
 
@@ -198,6 +196,4 @@ plot((outa + (ta.atr(10) * (array.get(arrMa,4)))), color=colg, linewidth=1, styl
 
 plotshape(repair,"Repair",shape.xcross,location.absolute,color.white)
 plotshape(repairS,"RepairS",shape.xcross,location.absolute,color.white)
-plotshape(CrossUp,"Cross",style = shape.xcross,location = location.absolute,offset = -1,color = color.white, size = size.auto, force_overlay = true)
-plotshape(CrossDown,"Cross",style = shape.xcross,location = location.absolute,offset = -1,color = color.white, size = size.auto, force_overlay = true)
 plotshape(mistress,"Mistress",style = shape.xcross,location = location.absolute,color = color.white, size = size.auto, force_overlay = true)
