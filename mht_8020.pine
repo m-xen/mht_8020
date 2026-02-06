@@ -14,13 +14,14 @@ trLen10 = input.int(10,"Bottom Range length (min)", minval = 1, maxval = 100, st
 eightyTwentyColor = input.color(color.silver, "8020 Colour")
 levelsColor = input.color(color.new(color.silver,transp = 67), "Levels Colour")
 lineStyle = input.string('Solid', 'Level Line Style', ['Solid', 'Dashed', 'Dotted'])
+movingAvgDev = input.bool(true,"MA Deviation Lines")
 lineStyleMA = input.string('Dotted', 'MA Line Style', ['Solid', 'Dashed', 'Dotted'])
 colr=color.rgb(255, 255, 255, 25)
 colg=color.rgb(255, 255, 255, 25)
 labelIndent = input.int(5,'Label Indent')
 
-repair = low==open?1:0
-repairS = high==open?1:0
+repair = low==open?open:0
+repairS = high==open?open:0
 
 trLen1Str = str.tostring((trLen1), '#')
 tr1H = request.security(syminfo.tickerid,"1",high)
@@ -122,9 +123,11 @@ for [index, value] in line.all
 
 // labels
 
-label.delete(labeltr)
-labeltr := label.new(bar_index + (labelIndent + 10), open, text = trLen1Str + " min ∑range " + trStr + "\n" + trLen10Str + " min range " + trStr10, style = label.style_label_center, textcolor = color.white, text_formatting = text.format_bold)
-label.set_color(labeltr,color.navy)
+tabletr = table.new(position.top_right,2,2,color.blue,color.blue,1,color.blue,1,true)
+table.cell(tabletr,0,0,trLen1Str + " min ∑range", text_color = color.white, text_size = size.small)
+table.cell(tabletr,0,1,trLen10Str + " min range", text_color = color.white, text_size = size.small)
+table.cell(tabletr,1,0,trStr, text_color = color.white, text_size = size.small)
+table.cell(tabletr,1,1,trStr10, text_color = color.white, text_size = size.small)
 
 label.delete(label0)
 label0 := label.new(bar_index + 3, (array.get(arr8020,0)), '80', style = label.style_none, textcolor = eightyTwentyColor, text_formatting = text.format_bold)
@@ -184,16 +187,16 @@ outa = ta.ema(close, emaLen)
 
 col=open>outa ? #00ff00 : #ff0000  
 plot(outa, color=col, linewidth=2, offset = 0)
-plot((outa - (ta.atr(10) * (array.get(arrMa,0)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa - (ta.atr(10) * (array.get(arrMa,1)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa - (ta.atr(10) * (array.get(arrMa,2)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa - (ta.atr(10) * (array.get(arrMa,3)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa - (ta.atr(10) * (array.get(arrMa,4)))), color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa + (ta.atr(10) * (array.get(arrMa,0)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa + (ta.atr(10) * (array.get(arrMa,1)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa + (ta.atr(10) * (array.get(arrMa,2)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa + (ta.atr(10) * (array.get(arrMa,3)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
-plot((outa + (ta.atr(10) * (array.get(arrMa,4)))), color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(movingAvgDev ? (outa - (ta.atr(10) * (array.get(arrMa,0)))): na, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(movingAvgDev ? (outa - (ta.atr(10) * (array.get(arrMa,1)))): na, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(movingAvgDev ? (outa - (ta.atr(10) * (array.get(arrMa,2)))): na, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(movingAvgDev ? (outa - (ta.atr(10) * (array.get(arrMa,3)))): na, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(movingAvgDev ? (outa - (ta.atr(10) * (array.get(arrMa,4)))): na, color=colr, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(movingAvgDev ? (outa + (ta.atr(10) * (array.get(arrMa,0)))): na, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(movingAvgDev ? (outa + (ta.atr(10) * (array.get(arrMa,1)))): na, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(movingAvgDev ? (outa + (ta.atr(10) * (array.get(arrMa,2)))): na, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(movingAvgDev ? (outa + (ta.atr(10) * (array.get(arrMa,3)))): na, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
+plot(movingAvgDev ? (outa + (ta.atr(10) * (array.get(arrMa,4)))): na, color=colg, linewidth=1, style = plot.style_line, offset=0, linestyle = lineStylePlot)
 
 // 8020 plots 
 
