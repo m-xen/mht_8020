@@ -42,9 +42,6 @@ tr10Ema = ta.ema(tr10,21)
 tr1Ema = ta.ema(minuteRange,21)
 trEma = (tr10Ema + tr1Ema) /2
 
-mistress = math.abs(open - close[1]) > 1 ? open : 0
-
-
 var float onehundred = na
 var label labeltr = na
 var label label0 = na
@@ -202,4 +199,3 @@ plot(movingAvgDev ? (outa + (ta.atr(10) * (array.get(arrMa,4)))): na, color=colg
 
 plotshape(repair,"Repair",shape.xcross,location.absolute,color.white)
 plotshape(repairS,"RepairS",shape.xcross,location.absolute,color.white)
-plotshape(mistress,"Mistress",style = shape.xcross,location = location.absolute,color = color.white, size = size.auto, force_overlay = true)
